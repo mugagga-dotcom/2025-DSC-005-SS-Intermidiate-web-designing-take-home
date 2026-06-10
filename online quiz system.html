@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ONLINE QUIZ SYSTEM</title>
+</head>
+<body>
+     <style>
+        body{                                          /* here am designing how all the designs across my web page will look like */
+          font-family: Georgia,'Franklin Gothic Medium';
+          justify-content: center;
+          margin-top: 40px;
+          font-size: 20px;
+          background-color: rgb(252, 253, 253);
+          display: flex;
+          color: rgb(16, 16, 102);
+        }
+
+        .container{          /* This is going to create a box in te centre containing the quiz */
+            width: 700px;
+            background: rgb(16, 16, 102);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px rgb(16, 16, 102);
+            text-align: center;
+        }
+
+        #question {                             /* This is the design for the box containing questions */
+            background-color: #fbfcfd;
+            border: 2px solid #4a90e2;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+#options {                /* This is the design for the box containing  answers */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#options button {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    background-color: white;
+    color: rgb(16, 16, 102);
+    font-weight: bold;
+    font-size: 16px;
+    text-align: left;
+    transition: 0.3s;
+}
+#options button:hover {            /* This is the design you see when you hover around */
+    background-color: #dbeafe;
+    border-color: #4a90e2;
+}
+
+
+#nextBtn,
+#restartBtn {        /* This is the design for control buttons */
+    margin-top: 20px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    background-color: #4a90e2;
+    color: white;
+    cursor: pointer;
+}
+
+#nextBtn:hover,    /* This is the design when you want to view the next question */
+#restartBtn:hover {
+    opacity: 0.9;
+}
+h1 {
+    color: #dbeafe;
+}
+    </style>
+
+    <div class="container">
+        <h1>Online Quiz System</h1> <!--This is my biggest heading -->
+
+        <h2 id="question"></h2> <!-- This indicates the questions section-->
+
+        <div id="options"></div> <!--This is for the answer buttons -->
+
+        <br>
+
+        <button id="nextBtn">Next Question</button> <!-- The button you click to go to the next question -->
+
+        <button id="restartBtn">Restart Quiz</button> <!-- This is where you click to restart the quiz again -->
+
+        <h3 id="result"></h3> <!-- This shows the user his or her results after combinig them -->
+
+    </div>
+
+    <script>
+           // The class for question is for storing question information
+        class Question {
+            constructor(question, options, answer) {
+                this.question = question;
+                this.options = options;
+                this.answer = answer;
+            }
+        }
+
+        // This is the section that controls the behaviour of the Quiz
+        class Quiz {
+
+            constructor(questions) {
+                this.questions = questions;
+                this.score = 0;
+                this.currentQuestion = 0;
+            }
+        
+
+           // This is the step that helps us to display the current question
+            displayQuestion() {
+
+                const q =
+                    this.questions[this.currentQuestion];
+
+                document.getElementById("question")
+                    .textContent = q.question;
+
+                const optionsDiv =
+                    document.getElementById("options");
+
+                optionsDiv.innerHTML = "";
+            
+
+                // Here i have created buttons to be clicked for answers so that the person is able to select an answer
+                q.options.forEach(option => {
+
+                    const button =
+                        document.createElement("button");
+
+                    button.textContent = option;
+
+                    button.onclick = () => {
+
+                       if (option === q.answer) {
+             //This checks if the answer is correct or wrong and changes the background color
+                        this.score++;
+                        button.style.backgroundColor = "#90EE90";
+
+                    } else {
+
+                        button.style.backgroundColor = "#FFB6C1";
+                    }
+
+                        // This is for disabling buttons after selecting an answer and the user can not select another answer 
+                        document
+                            .querySelectorAll("#options button")
+                            .forEach(btn =>
+                                btn.disabled = true);
+                    };
+
+                    optionsDiv.appendChild(button);
+                });
+            }
+            
+
+            nextQuestion() {
+
+    this.currentQuestion++;
+
+    if (this.currentQuestion < this.questions.length) {
+
+        this.displayQuestion();
+
+    } else {
+
+        document.getElementById("question").textContent = "Quiz Finished!";
+        document.getElementById("options").innerHTML = "";
+
+        document.getElementById("result").textContent =
+            `Final Score: ${this.score} / ${this.questions.length}`;
+
+        document.getElementById("nextBtn").style.display = "none";
+    }
+}
+        
+restartQuiz() {
+
+    this.score = 0;
+    this.currentQuestion = 0;
+
+    document.getElementById("result").textContent = "";
+    document.getElementById("nextBtn").style.display = "inline-block";
+
+    this.displayQuestion();
+}
+        }
+
+        //Creating the questions to be answered by the user 
+        const questions = [
+new Question(
+    "What was the real name of the legendary Kadongo Kamu artist Paul Kafeero?",
+    ["Paul Mukasa", "Paul Kafeero", "Paul Ssali", "Paul Saka"],
+    "Paul Kafeero"
+),
+
+new Question(
+    "Which Ugandan artist is popularly known as the 'Ghetto President'?",
+    ["Bebe Cool", "Jose Chameleone", "Bobi Wine", "King Saha"],
+    "Bobi Wine"
+),
+
+new Question(
+    "Which famous song was performed by Paul Kafeero?",
+    ["Walumbe Zaaya", "Carolina", "Siliimu", "Ability"],
+    "Walumbe Zaaya"
+),
+
+new Question(
+    "What is the real name of Jose Chameleone?",
+    ["Moses Ssali", "Joseph Mayanja", "Douglas Mayanja", "Ronald Mayinja"],
+    "Joseph Mayanja"
+),
+
+new Question(
+    "Which artist formed the Goodlyfe Crew with the late Mowzey Radio?",
+    ["Pallaso", "King Saha", "Weasel", "Bebe Cool"],
+    "Weasel"
+),
+
+new Question(
+    "Which female artist was popularly known as the 'Karma Queen'?",
+    ["Juliana Kanyomozi", "Sheebah Karungi", "Cinderella Sanyu", "Irene Ntale"],
+    "Sheebah Karungi"
+),
+
+new Question(
+    "Which Ugandan artist is known as 'The Big Size'?",
+    ["Bebe Cool", "King Saha", "Geoffrey Lutaaya", "Mesach Semakula"],
+    "Bebe Cool"
+),
+
+new Question(
+    "Which artist gained international recognition with the hit song 'Sitya Loss'?",
+    ["Eddy Kenzo", "Pallaso", "A Pass", "King Saha"],
+    "Eddy Kenzo"
+),
+
+new Question(
+    "Which member of the Mayanja family performs under the stage name Pallaso?",
+    ["Joseph Mayanja", "Fred Mayanja", "Douglas Mayanja", "Humphrey Mayanja"],
+    "Douglas Mayanja"
+),
+
+new Question(
+    "Which music genre is most closely associated with Paul Kafeero?",
+    ["Dancehall", "Afrobeats", "Kadongo Kamu", "Reggae"],
+    "Kadongo Kamu"
+),
+];
+         // This is the quiz object
+        const quiz = new Quiz(questions);
+
+        // This enables the displaying of the first question
+        quiz.displayQuestion();
+
+        // This is the next button that helps the user to press next
+        document
+            .getElementById("nextBtn")
+            .addEventListener(
+                "click",
+                () => quiz.nextQuestion()
+            );
+
+        // This is the restart button that helps the user to restart the quiz
+        document
+            .getElementById("restartBtn")
+            .addEventListener(
+                "click",
+                () => quiz.restartQuiz()
+            );
+
+    </script>
+</body>
+</html>
