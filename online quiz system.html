@@ -76,6 +76,17 @@
 h1 {
     color: #dbeafe;
 }
+
+#finalBox {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #dbeafe;
+    border-radius: 10px;
+    font-size: 22px;
+    font-weight: bold;
+    color: #06163b;
+}
+
     </style>
 
     <div class="container">
@@ -83,7 +94,7 @@ h1 {
 
         <h2 id="question"></h2> <!-- This indicates the questions section-->
 
-        <div id="options"></div> <!--This is for the answer buttons -->
+        <div id="options"></div> <!--This is for the answer options -->
 
         <br>
 
@@ -92,7 +103,7 @@ h1 {
         <button id="restartBtn">Restart Quiz</button> <!-- This is where you click to restart the quiz again -->
 
         <h3 id="result"></h3> <!-- This shows the user his or her results after combinig them -->
-
+         <div id="finalBox"></div>
     </div>
 
     <script>
@@ -162,24 +173,27 @@ h1 {
             }
             
 
-            nextQuestion() {
+           nextQuestion() {
 
     this.currentQuestion++;
 
-    if (this.currentQuestion < this.questions.length) {
-
-        this.displayQuestion();
-
-    } else {
+    // This allows the quiz finish when it has reached the last question
+    if (this.currentQuestion >= this.questions.length) {
 
         document.getElementById("question").textContent = "Quiz Finished!";
         document.getElementById("options").innerHTML = "";
 
-        document.getElementById("result").textContent =
-            `Final Score: ${this.score} / ${this.questions.length}`;
+        document.getElementById("result").textContent = "";
+
+        document.getElementById("finalBox").textContent =
+            `You scored ${this.score} out of ${this.questions.length} marks`;
 
         document.getElementById("nextBtn").style.display = "none";
+
+        return; 
     }
+
+    this.displayQuestion();
 }
         
 restartQuiz() {
@@ -262,7 +276,7 @@ new Question(
         // This enables the displaying of the first question
         quiz.displayQuestion();
 
-        // This is the next button that helps the user to press next
+        // This is the next button that helps the user to press next and see the next question
         document
             .getElementById("nextBtn")
             .addEventListener(
@@ -270,7 +284,7 @@ new Question(
                 () => quiz.nextQuestion()
             );
 
-        // This is the restart button that helps the user to restart the quiz
+        // This is the restart button that helps the user to restart the quiz again
         document
             .getElementById("restartBtn")
             .addEventListener(
